@@ -1,0 +1,31 @@
+{
+    "department_rooms": {
+        "Applied Science": [
+            "chem lab",
+            "Physics lab",
+            "BCME lab"
+        ],
+        "CS": [
+            "cs-IT-Lab A",
+            "cs-IT-Lab B",
+            "cs-IT-Lab C"
+        ],
+        "IT": [
+            "cs-IT-Lab A",
+            "cs-IT-Lab B",
+            "cs-IT-Lab C"
+        ],
+        "MECH": [],
+        "EE": [],
+        "EC": [],
+        "CIVIL": [
+            "bcme lab"
+        ]
+    },
+    "shared_blocks": {
+        "CS_IT_Common": [
+            "Common-Lab 1",
+            "Common-Lab 2"
+        ]
+    }
+}

@@ -1,0 +1,763 @@
+{% extends "base.html" %}
+
+{% block title %}Timetable View Portal - Timetable Automation System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .view-content {
+        display: none;
+    }
+
+    .view-content.active {
+        display: block;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .tab-btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        color: var(--text-muted);
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+        background: var(--blue-primary);
+        color: white;
+    }
+
+    .filter-section {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
+
+    .select-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    select {
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        font-size: 14px;
+        outline: none;
+        min-width: 200px;
+    }
+
+    .timetable-display {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    th,
+    td {
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #f1f5f9;
+    }
+
+    th {
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .slot-box {
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .subject {
+        font-weight: 700;
+        color: var(--text-main);
+        font-size: 14px;
+    }
+
+    .detail {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .download-btn {
+        padding: 10px 24px;
+        background-color: var(--success);
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+    }
+
+    .download-btn:hover {
+        background-color: #059669;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 10px -1px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Responsive adjustments for filters */
+    @media (max-width: 992px) {
+        .filter-section {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+        
+        .select-group {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        select {
+            min-width: 100%;
+        }
+
+        .download-btn {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 600px) {
+        th, td {
+            padding: 8px 4px;
+            font-size: 11px;
+        }
+        .subject {
+            font-size: 11px;
+        }
+        .detail {
+            font-size: 9px;
+        }
+        .type-tag {
+            font-size: 9px;
+            padding: 2px 4px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tabs">
+    <button class="tab-btn active" onclick="showTab(event, 'class-view')">🏢 Department Schedule</button>
+    <button class="tab-btn" onclick="showTab(event, 'teacher-view')">👨‍🏫 Teacher Schedule</button>
+    <button class="tab-btn" onclick="showTab(event, 'lab-view')">🔬 Lab Schedule</button>
+</div>
+
+<!-- Class Wise View -->
+<div id="class-view" class="view-content active">
+    <div class="filter-section">
+        <div class="select-group">
+            <label>Select Department:</label>
+            <select id="dept-select" onchange="updateYearDropdown()">
+                <option value="">-- Choose Department --</option>
+                {% for dept in departments %}
+                <option value="{{ dept }}">{{ dept }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="select-group">
+            <label>Select Year:</label>
+            <select id="year-select" onchange="updateSectionDropdown()" disabled>
+                <option value="">-- Choose Year --</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <label>Select Section:</label>
+            <select id="section-select" onchange="updateClassTimetable()" disabled>
+                <option value="">-- Choose Section --</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="download-btn" id="class-dl-btn" onclick="downloadTimetable('class', 'excel')"
+                style="display: none;">
+                📥 Download Excel
+            </button>
+            <button class="download-btn" id="class-pdf-btn" onclick="downloadTimetable('class', 'pdf')"
+                style="display: none; background-color: #ef4444;">
+                📄 Download PDF
+            </button>
+            {% if session.get('logged_in') %}
+            <button class="download-btn" id="edit-mode-btn" onclick="toggleEditMode()"
+                style="display: none; background-color: var(--text-muted);">
+                ✏️ Edit Mode: OFF
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="timetable-display" id="class-table-container">
+        <p style="text-align: center; color: var(--text-muted); padding: 40px;">Select a department, year, and section to view its timetable</p>
+    </div>
+</div>
+
+<!-- Teacher Wise View -->
+<div id="teacher-view" class="view-content">
+    <div class="filter-section">
+        <div class="select-group">
+            <label>Select Teacher:</label>
+            <select id="teacher-select" onchange="updateTeacherTimetable()">
+                <option value="">-- Choose Teacher --</option>
+                {% for teacher in teachers %}
+                <option value="{{ teacher }}">{{ teacher }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="download-btn" id="teacher-dl-btn" onclick="downloadTimetable('teacher', 'excel')"
+                style="display: none;">
+                📥 Download Excel
+            </button>
+            <button class="download-btn" id="teacher-pdf-btn" onclick="downloadTimetable('teacher', 'pdf')"
+                style="display: none; background-color: #ef4444;">
+                📄 Download PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="timetable-display" id="teacher-table-container">
+        <p style="text-align: center; color: var(--text-muted); padding: 40px;">Select a teacher to view their schedule
+        </p>
+    </div>
+</div>
+
+<!-- Lab Wise View -->
+<div id="lab-view" class="view-content">
+    <div class="filter-section" style="flex-direction: column; align-items: stretch; gap: 15px;">
+        <div style="display: flex; gap: 15px;">
+            <div class="select-group">
+                <label>View Mode:</label>
+                <select id="lab-mode-select" onchange="updateLabViewMode()" style="min-width: 200px;">
+                    <option value="dept">By Department</option>
+                    <option value="sem">By Year (Class-wise)</option>
+                </select>
+            </div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <div class="select-group" id="lab-filter-group">
+                <label id="lab-filter-label">Select Department:</label>
+                <select id="lab-filter-select" onchange="updateLabTimetable()">
+                    <option value="">-- Choose --</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="timetable-display" id="lab-table-container">
+        <p style="text-align: center; color: var(--text-muted); padding: 40px;">Select filters to view lab schedule</p>
+    </div>
+</div>
+
+<!-- Manage Data -->
+{% if session.get('logged_in') %}
+<div style="margin-top: 40px; text-align: right;">
+    <div style="display: inline-block; position: relative;">
+        <button onclick="toggleClearMenu()" style="background: white; color: var(--danger); border: 1px solid var(--danger);">🗑️ Clear Data</button>
+        
+        <div id="clear-menu" style="display: none; position: absolute; right: 0; bottom: 120%; background: white; border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); padding: 20px; width: 300px; text-align: left; z-index: 100;">
+            <p style="margin-top: 0; font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 12px;">Delete Specific Data:</p>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                <select id="clear-dept" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px;">
+                    <option value="">-- All Departments --</option>
+                    {% for dept in departments %}
+                    <option value="{{ dept }}">{{ dept }}</option>
+                    {% endfor %}
+                </select>
+                <select id="clear-year" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px;">
+                    <option value="">-- All Years --</option>
+                    <option value="First Year">First Year</option>
+                    <option value="Second Year">Second Year</option>
+                    <option value="Third Year">Third Year</option>
+                    <option value="Fourth Year">Fourth Year</option>
+                </select>
+                <button onclick="clearData()" style="padding: 10px; background: var(--danger); font-size: 13px;">Delete Selection</button>
+            </div>
+            <hr style="border: none; border-top: 1px solid var(--border); margin: 15px 0;">
+            <button onclick="document.getElementById('clear-dept').value=''; document.getElementById('clear-year').value=''; clearData();" style="width: 100%; padding: 10px; background: #991b1b; font-size: 13px;">🚨 Clear EVERYTHING</button>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script id="timetables-data" type="application/json">
+    {{ timetables | tojson | safe }}
+</script>
+<script>
+    // Data structure: { dept: { sem: { section: { day: [slots...] } } } }
+    const allTimetables = JSON.parse(document.getElementById('timetables-data').textContent);
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const periods = ["P1", "P2", "P3", "P4", "P5", "P6"];
+
+    function showTab(event, tabId) {
+        document.querySelectorAll('.view-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if (tabId === 'lab-view') updateLabViewMode();
+    }
+
+    // ─── DEPARTMENT SCHEDULE (Dept → Year → Section) ───
+    function updateYearDropdown() {
+        const dept = document.getElementById('dept-select').value;
+        const yearSelect = document.getElementById('year-select');
+        const secSelect = document.getElementById('section-select');
+
+        yearSelect.innerHTML = '<option value="">-- Choose Year --</option>';
+        secSelect.innerHTML = '<option value="">-- Choose Section --</option>';
+        secSelect.disabled = true;
+
+        if (dept && allTimetables[dept]) {
+            yearSelect.disabled = false;
+            Object.keys(allTimetables[dept]).sort().forEach(sem => {
+                const opt = document.createElement('option');
+                opt.value = sem; opt.textContent = sem;
+                yearSelect.appendChild(opt);
+            });
+        } else {
+            yearSelect.disabled = true;
+        }
+        updateClassTimetable();
+    }
+
+    function updateSectionDropdown() {
+        const dept = document.getElementById('dept-select').value;
+        const year = document.getElementById('year-select').value;
+        const secSelect = document.getElementById('section-select');
+
+        secSelect.innerHTML = '<option value="">-- Choose Section --</option>';
+
+        if (dept && year && allTimetables[dept] && allTimetables[dept][year]) {
+            secSelect.disabled = false;
+            Object.keys(allTimetables[dept][year]).sort().forEach(sec => {
+                const opt = document.createElement('option');
+                opt.value = sec; opt.textContent = sec;
+                secSelect.appendChild(opt);
+            });
+            // Auto-select if only one section
+            if (Object.keys(allTimetables[dept][year]).length === 1) {
+                secSelect.selectedIndex = 1;
+                updateClassTimetable();
+            }
+        } else {
+            secSelect.disabled = true;
+        }
+        updateClassTimetable();
+    }
+
+    function createTable(data, type, identifier) {
+        let html = '<table><thead><tr><th>Day</th>';
+        periods.forEach(p => html += `<th>${p}</th>`);
+        html += '</tr></thead><tbody>';
+
+        days.forEach(day => {
+            html += `<tr><td><strong>${day}</strong></td>`;
+            for (let i = 0; i < 6; i++) {
+                let slot = data[day] ? data[day][i] : null;
+                let isFree = !slot || slot.subject === 'Free';
+
+                let editAttrs = type === 'class' ? `data-day="${day}" data-idx="${i}" onclick="handleSlotClick(this)" class="slot-cell"` : ``;
+                
+                html += `<td ${editAttrs}><div class="slot-box">`;
+                if (isFree) {
+                    html += `<span class="type-tag type-free">Free</span>`;
+                } else {
+                    if (slot.linked && slot.linked_from) {
+                        html += `<span style="font-size: 10px; background: #7c3aed; color: white; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 3px;">🔗 ${slot.linked_from}</span>`;
+                    }
+                    html += `<span class="subject">${slot.subject}</span>`;
+                    html += `<span class="detail">${type === 'class' ? 'Teacher: ' + slot.teacher : 'Class: ' + (slot.class || 'Assigned')}</span>`;
+                    if (slot.room) {
+                        html += `<span class="detail" style="font-style: italic; color: var(--blue-primary);">📍 Room: ${slot.room}</span>`;
+                    }
+                    let slotType = slot.type ? slot.type : 'Theory';
+                    html += `<span class="type-tag type-${slotType.toLowerCase()}">${slotType}</span>`;
+                }
+                html += `</div></td>`;
+            }
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        return html;
+    }
+
+    function updateClassTimetable() {
+        const dept = document.getElementById('dept-select').value;
+        const year = document.getElementById('year-select').value;
+        const section = document.getElementById('section-select').value;
+        const container = document.getElementById('class-table-container');
+        const dlBtn = document.getElementById('class-dl-btn');
+        const editBtn = document.getElementById('edit-mode-btn');
+
+        if (dept && year && section && allTimetables[dept] && allTimetables[dept][year] && allTimetables[dept][year][section]) {
+            container.innerHTML = `<h3 style="margin-bottom:15px; color: var(--text-main);">${dept} — ${year} — ${section}</h3>` + createTable(allTimetables[dept][year][section], 'class', section);
+            dlBtn.style.display = 'block';
+            document.getElementById('class-pdf-btn').style.display = 'block';
+            if(editBtn) editBtn.style.display = 'block';
+            
+            // Re-apply edit mode styles if active
+            if(isEditMode) {
+                document.querySelectorAll('.slot-cell').forEach(cell => {
+                    cell.style.cursor = 'pointer';
+                    cell.style.border = '2px dashed var(--text-muted)';
+                });
+            }
+        } else {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">Select a department, year, and section to view the timetable</p>';
+            dlBtn.style.display = 'none';
+            document.getElementById('class-pdf-btn').style.display = 'none';
+            if(editBtn) editBtn.style.display = 'none';
+        }
+    }
+
+    // ─── EDIT MODE LOGIC ───
+    let isEditMode = false;
+    let selectedSlot = null;
+
+    function toggleEditMode() {
+        isEditMode = !isEditMode;
+        const btn = document.getElementById('edit-mode-btn');
+        
+        if (isEditMode) {
+            btn.innerHTML = '✏️ Edit Mode: ON';
+            btn.style.backgroundColor = 'var(--blue-primary)';
+            document.querySelectorAll('.slot-cell').forEach(cell => {
+                cell.style.cursor = 'pointer';
+                cell.style.border = '2px dashed var(--text-muted)';
+            });
+            alert("Edit Mode ON! Click on two slots to swap them.");
+        } else {
+            btn.innerHTML = '✏️ Edit Mode: OFF';
+            btn.style.backgroundColor = 'var(--text-muted)';
+            document.querySelectorAll('.slot-cell').forEach(cell => {
+                cell.style.cursor = 'default';
+                cell.style.border = '1px solid var(--border)';
+                cell.style.backgroundColor = '';
+            });
+            selectedSlot = null;
+        }
+    }
+
+    function handleSlotClick(cell) {
+        if (!isEditMode) return;
+
+        if (!selectedSlot) {
+            // Select first slot
+            selectedSlot = cell;
+            cell.style.backgroundColor = 'rgba(37, 99, 235, 0.2)'; // Highlight
+            cell.style.border = '2px solid var(--blue-primary)';
+        } else {
+            // Select second slot and swap
+            const day1 = selectedSlot.getAttribute('data-day');
+            const idx1 = selectedSlot.getAttribute('data-idx');
+            const day2 = cell.getAttribute('data-day');
+            const idx2 = cell.getAttribute('data-idx');
+
+            const dept = document.getElementById('dept-select').value;
+            const sem = document.getElementById('year-select').value;
+            const section = document.getElementById('section-select').value;
+
+            if (selectedSlot !== cell) {
+                if (confirm(`Swap ${day1} P${parseInt(idx1)+1} with ${day2} P${parseInt(idx2)+1}?`)) {
+                    fetch('/swap_slots', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            dept: dept,
+                            sem: sem,
+                            section: section,
+                            day1: day1,
+                            idx1: idx1,
+                            day2: day2,
+                            idx2: idx2
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Quickest way to refresh is to reload the page to get fresh JSON,
+                            // but we can preserve the selection state by adding URL params or just reloading.
+                            // For a seamless experience, we just reload for now, user can re-select dropdown.
+                            location.reload();
+                        } else {
+                            alert("Error swapping: " + data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert("An error occurred while swapping slots.");
+                    });
+                }
+            }
+            
+            // Reset selection
+            selectedSlot.style.backgroundColor = '';
+            selectedSlot.style.border = '2px dashed var(--text-muted)';
+            selectedSlot = null;
+        }
+    }
+
+    // ─── TEACHER SCHEDULE ───
+    function updateTeacherTimetable() {
+        const selected = document.getElementById('teacher-select').value;
+        const container = document.getElementById('teacher-table-container');
+        const dlBtn = document.getElementById('teacher-dl-btn');
+
+        if (selected) {
+            const searchName = selected.toLowerCase().trim();
+            let teacherData = {};
+            days.forEach(day => {
+                teacherData[day] = Array(6).fill(null).map(() => ({ subject: 'Free', teacher: 'Free', type: 'Free', classes: [] }));
+                for (let i = 0; i < 6; i++) {
+                    let slotsAtThisTime = [];
+                    for (let dept in allTimetables) {
+                        for (let sem in allTimetables[dept]) {
+                            for (let section in allTimetables[dept][sem]) {
+                                let schedule = allTimetables[dept][sem][section];
+                                if (schedule[day]) {
+                                    let slot = schedule[day][i];
+                                    if (slot && slot.teacher && slot.teacher.toLowerCase().trim() === searchName) {
+                                        const classInfo = `${dept} - ${sem} - ${section}`;
+                                        if (!slotsAtThisTime.find(s => s.subject === slot.subject && s.class === classInfo)) {
+                                            slotsAtThisTime.push({ ...slot, class: classInfo });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (slotsAtThisTime.length > 0) {
+                        // Merge multiple classes (shared labs etc) into one display slot
+                        const mainSlot = slotsAtThisTime[0];
+                        const allDepts = slotsAtThisTime.map(s => s.class).join(" / ");
+                        teacherData[day][i] = { ...mainSlot, class: allDepts };
+                    } else {
+                        teacherData[day][i] = { subject: 'Free', teacher: 'Free', type: 'Free' };
+                    }
+                }
+            });
+            container.innerHTML = createTable(teacherData, 'teacher', selected);
+            dlBtn.style.display = 'block';
+            document.getElementById('teacher-pdf-btn').style.display = 'block';
+        } else {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">Select a teacher to view their schedule</p>';
+            dlBtn.style.display = 'none';
+            document.getElementById('teacher-pdf-btn').style.display = 'none';
+        }
+    }
+
+    // ─── LAB SCHEDULE ───
+    function updateLabViewMode() {
+        const mode = document.getElementById('lab-mode-select').value;
+        const label = document.getElementById('lab-filter-label');
+        const select = document.getElementById('lab-filter-select');
+
+        select.innerHTML = '<option value="">-- Choose --</option>';
+
+        if (mode === 'dept') {
+            label.textContent = 'Select Department:';
+            let depts = Object.keys(allTimetables).sort();
+            select.appendChild(new Option('-- Show All --', 'all'));
+            depts.forEach(d => {
+                select.appendChild(new Option(d, d));
+            });
+        } else {
+            label.textContent = 'Select Year:';
+            let sems = new Set();
+            for (let d in allTimetables) {
+                if (!allTimetables[d]) continue;
+                for (let s in allTimetables[d]) {
+                    sems.add(s);
+                }
+            }
+            select.appendChild(new Option('-- Show All --', 'all'));
+            Array.from(sems).sort().forEach(s => {
+                select.appendChild(new Option(s, s));
+            });
+        }
+        select.value = 'all';
+        updateLabTimetable();
+    }
+
+    function getAllLabs() {
+        let labs = [];
+        for (let dept in allTimetables) {
+            for (let sem in allTimetables[dept]) {
+                for (let section in allTimetables[dept][sem]) {
+                    let schedule = allTimetables[dept][sem][section];
+                    for (let day of days) {
+                        if (!schedule[day]) continue;
+                        let slots = schedule[day];
+                        for (let i = 0; i < 6; i++) {
+                            let slot = slots[i];
+                            if (slot && slot.type === 'Lab' && slot.subject !== 'Free') {
+                                let start = i;
+                                let end = i;
+                                while (end + 1 < 6 && slots[end + 1] && slots[end + 1].subject === slot.subject && slots[end + 1].room === slot.room) {
+                                    end++;
+                                }
+                                labs.push({
+                                    dept: dept, sem: sem, section: section,
+                                    subject: slot.subject, teacher: slot.teacher,
+                                    room: slot.room || 'Assigned', day: day,
+                                    period: `P${start + 1} - P${end + 1}`,
+                                    linked: slot.linked || false
+                                });
+                                i = end;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return labs;
+    }
+
+    function updateLabTimetable() {
+        const mode = document.getElementById('lab-mode-select').value;
+        const filterValue = document.getElementById('lab-filter-select').value;
+        const container = document.getElementById('lab-table-container');
+
+        if (!filterValue) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">Select filters to view lab schedule</p>';
+            return;
+        }
+
+        let allLabs = getAllLabs();
+        let filteredLabs = allLabs.filter(lab => {
+            if (filterValue === 'all') return true;
+            if (mode === 'dept') return lab.dept === filterValue;
+            if (mode === 'sem') return lab.sem === filterValue;
+            return false;
+        });
+
+        const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+        filteredLabs.sort((a, b) => {
+            if (a.day !== b.day) return dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
+            return a.period.localeCompare(b.period);
+        });
+
+        if (filteredLabs.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">No labs allocated for this selection.</p>';
+            return;
+        }
+
+        let html = `<table>
+            <thead><tr>
+                <th>Department</th><th>Year</th><th>Section</th>
+                <th>Subject</th><th>Teacher</th><th>Room</th><th>Day</th><th>Time</th>
+            </tr></thead><tbody>`;
+
+        filteredLabs.forEach(lab => {
+            let badge = lab.linked ? '<span style="font-size:10px;background:#7c3aed;color:white;padding:1px 5px;border-radius:3px;margin-left:4px;">🔗</span>' : '';
+            html += `<tr>
+                <td><strong>${lab.dept}</strong></td>
+                <td>${lab.sem}</td>
+                <td>${lab.section}${badge}</td>
+                <td><span class="subject">${lab.subject}</span></td>
+                <td>${lab.teacher}</td>
+                <td><span style="color: var(--blue-primary); font-weight: 600;">${lab.room}</span></td>
+                <td>${lab.day}</td>
+                <td><span class="type-tag type-lab" style="font-size: 12px; padding: 4px 8px;">${lab.period}</span></td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    // ─── DOWNLOAD ───
+    function downloadTimetable(type, format) {
+        let route = format === 'pdf' ? '/download/pdf/' : '/download/';
+        
+        if (type === 'class') {
+            const dept = document.getElementById('dept-select').value;
+            const year = document.getElementById('year-select').value;
+            const section = document.getElementById('section-select').value;
+            if (dept && year && section) {
+                window.location.href = `${route}class/${encodeURIComponent(dept + '/' + year + '/' + section)}`;
+            }
+        } else {
+            const identifier = document.getElementById('teacher-select').value;
+            if (identifier) {
+                window.location.href = `${route}teacher/${encodeURIComponent(identifier)}`;
+            }
+        }
+    }
+
+    // ─── CLEAR DATA ───
+    function toggleClearMenu() {
+        const menu = document.getElementById('clear-menu');
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function clearData() {
+        const dept = document.getElementById('clear-dept').value;
+        const sem = document.getElementById('clear-year').value; // FIXED: was clear-sem
+
+        let msg = '';
+        let payload = {};
+
+        if (!dept && !sem) {
+            msg = 'Are you sure you want to clear ALL timetable data for EVERY department and year? This cannot be undone.';
+            payload = { scope: 'all' };
+        } else if (dept && !sem) {
+            msg = `Are you sure you want to clear ALL years for the ${dept} department?`;
+            payload = { scope: 'dept', dept: dept };
+        } else if (dept && sem) {
+            msg = `Are you sure you want to clear ${dept} - ${sem}?`;
+            payload = { scope: 'dept', dept: dept, sem: sem };
+        } else {
+            alert('Please select a department first if you want to clear a specific year.');
+            return;
+        }
+
+        if (!confirm(msg)) return;
+
+        try {
+            const res = await fetch('/clear_data', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            alert(result.message);
+            window.location.reload();
+        } catch(e) {
+            alert('Error clearing data.');
+        }
+    }
+</script>
+{% endblock %}

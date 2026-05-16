@@ -1,0 +1,16 @@
+{
+    "department_rooms": {
+        "CS": [
+            "itl331"
+        ],
+        "IT": [],
+        "MECH": [
+            "itl331",
+            "itl321"
+        ],
+        "EE": [],
+        "EC": [],
+        "CIVIL": []
+    },
+    "shared_blocks": {}
+}

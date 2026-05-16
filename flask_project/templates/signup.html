@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 100px auto; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--border);">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: var(--text-main); margin-bottom: 10px;">Create Account</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">Join the independent timetable platform</p>
+    </div>
+
+    <form method="POST">
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: var(--text-main);">Username</label>
+            <input type="text" name="username" required 
+                style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; transition: border-color 0.2s;"
+                placeholder="Choose a username">
+        </div>
+        <div style="margin-bottom: 30px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: var(--text-main);">Password</label>
+            <input type="password" name="password" required 
+                style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px;"
+                placeholder="Choose a password">
+        </div>
+        <button type="submit" 
+            style="width: 100%; padding: 14px; background: var(--blue-primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: transform 0.2s, opacity 0.2s;">
+            Create Account
+        </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 25px;">
+        <p style="color: var(--text-muted); font-size: 14px;">Already have an account? 
+            <a href="{{ url_for('login') }}" style="color: var(--blue-primary); text-decoration: none; font-weight: 600;">Log In</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

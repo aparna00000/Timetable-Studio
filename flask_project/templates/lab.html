@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+
+{% block title %}Bulk Lab Allocation - Timetable Automation System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .bulk-container {
+        width: 100%;
+        max-width: 1100px;
+        margin: 0 auto;
+        background: var(--background);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 24px;
+        font-size: 13px;
+        table-layout: fixed;
+    }
+
+    table th {
+        background-color: #f8fafc;
+        color: var(--text-muted);
+        padding: 12px;
+        font-weight: 600;
+        border-bottom: 2px solid var(--border);
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.05em;
+    }
+
+    table td {
+        padding: 12px 8px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-main);
+    }
+
+    .info-box {
+        background: #eff6ff;
+        padding: 16px;
+        margin-bottom: 24px;
+        border-left: 4px solid var(--blue-primary);
+        border-radius: 4px;
+        color: #1e3a8a;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bulk-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0; color: var(--text-main);">🚀 Advanced Lab Allocation</h2>
+        <div class="view-toggle" style="background: #f1f5f9; padding: 4px; border-radius: 8px; display: flex; gap: 4px;">
+            <button id="toggle-dept" onclick="switchView('dept')" style="padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">By Department</button>
+            <button id="toggle-year" onclick="switchView('year')" style="padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">By Year</button>
+        </div>
+    </div>
+
+    <div id="room-management" style="margin-bottom: 30px; padding: 25px; background: #ffffff; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: var(--text-main); display: flex; align-items: center; gap: 10px;">
+            🛠️ Room Registry <span id="room-count-badge" style="background: var(--blue-primary); color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px;">0 Rooms Available</span>
+        </h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Add lab rooms for each department (separated by commas) to prevent overlapping schedules.</p>
+        <div id="room-editor" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;"></div>
+        <br>
+        <button onclick="saveRooms()" style="padding: 10px 20px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">💾 Save Room Configurations</button>
+    </div>
+
+    <div id="filter-section" style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 8px; display: flex; align-items: center; gap: 15px;">
+        <label id="mode-label" style="font-weight: 600; color: var(--text-muted);"></label>
+        <select id="mode-selector" onchange="renderGrid()" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px; min-width: 200px;"></select>
+    </div>
+
+    <div class="info-box">
+        💡 <strong>Rules:</strong> Each class gets 2 subjects per week. They will be placed on <u>different days</u>. Clashes for Teachers and Rooms are automatically prevented.
+    </div>
+
+    <div id="grid-container" style="overflow-x: auto;"></div>
+
+    <div style="margin-top: 30px; display: flex; justify-content: center;">
+        <button onclick="generateLabs()" style="padding: 15px 40px; font-size: 16px; background: var(--blue-primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 6px -1px rgba(37,99,235,0.2);">
+            ✨ Generate Clash-Free Timetable
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let metadata = { departments: [], branch_depts: [], years: [], rooms: { department_rooms: {}, shared_blocks: {} } };
+    let currentView = 'dept'; // 'dept' or 'year'
+    let gridEntries = [];
+
+    // Fetch rooms and depts on load
+    async function init() {
+        const res = await fetch('/get_lab_metadata');
+        metadata = await res.json();
+        updateRoomCount();
+        switchView('dept');
+    }
+
+    function updateRoomCount() {
+        let count = 0;
+        Object.values(metadata.rooms.department_rooms).forEach(list => count += list.length);
+        Object.values(metadata.rooms.shared_blocks).forEach(list => count += list.length);
+        document.getElementById('room-count-badge').textContent = `${count} Rooms Configured`;
+    }
+
+    function switchView(view) {
+        currentView = view;
+        document.getElementById('toggle-dept').style.background = view === 'dept' ? 'var(--blue-primary)' : 'transparent';
+        document.getElementById('toggle-dept').style.color = view === 'dept' ? 'white' : 'var(--text-muted)';
+        document.getElementById('toggle-year').style.background = view === 'year' ? 'var(--blue-primary)' : 'transparent';
+        document.getElementById('toggle-year').style.color = view === 'year' ? 'white' : 'var(--text-muted)';
+
+        const label = document.getElementById('mode-label');
+        const selector = document.getElementById('mode-selector');
+        selector.innerHTML = "";
+
+        if (view === 'dept') {
+            label.textContent = "Select Department:";
+            metadata.departments.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d; opt.textContent = d;
+                selector.appendChild(opt);
+            });
+        } else {
+            label.textContent = "Select Year:";
+            metadata.years.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s; opt.textContent = s;
+                selector.appendChild(opt);
+            });
+        }
+        renderRoomEditor();
+        renderGrid();
+    }
+
+    function renderRoomEditor() {
+        const editor = document.getElementById('room-editor');
+        editor.innerHTML = "";
+        metadata.departments.forEach(d => {
+            const box = document.createElement('div');
+            box.innerHTML = `
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px;">${d} Rooms</div>
+                <textarea id="rooms-${d}" placeholder="e.g. Lab 1, Lab 2" style="width: 100%; height: 60px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px;">${(metadata.rooms.department_rooms[d] || []).join(', ')}</textarea>
+            `;
+            editor.appendChild(box);
+        });
+    }
+
+    async function saveRooms() {
+        const updated = { department_rooms: {}, shared_blocks: metadata.rooms.shared_blocks };
+        metadata.departments.forEach(d => {
+            const val = document.getElementById(`rooms-${d}`).value;
+            updated.department_rooms[d] = val.split(',').map(s => s.trim()).filter(s => s);
+        });
+        const res = await fetch('/save_lab_resources', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(updated)
+        });
+        if (res.ok) {
+            alert("Room Registry Updated!");
+            location.reload();
+        }
+    }
+
+    function getAllRoomsForDept(dept) {
+        // Collect ALL rooms from the registry so the dropdown is fully populated.
+        // The backend smart-mapping will enforce the correct assignment constraints.
+        let rooms = [];
+        // Own department rooms first
+        rooms = rooms.concat(metadata.rooms.department_rooms[dept] || []);
+        // All other department rooms
+        for (const [d, list] of Object.entries(metadata.rooms.department_rooms)) {
+            if (d !== dept) rooms = rooms.concat(list);
+        }
+        // All shared block rooms
+        for (const [block, list] of Object.entries(metadata.rooms.shared_blocks)) {
+            rooms = rooms.concat(list);
+        }
+        // Deduplicate
+        return [...new Set(rooms)];
+    }
+
+    function renderGrid() {
+        const container = document.getElementById('grid-container');
+        const selection = document.getElementById('mode-selector').value;
+        if (!selection) return;
+
+        const isAppliedSci = (selection === 'Applied Science') || (currentView === 'sem');
+        const showLinkedCol = (selection === 'Applied Science' && currentView === 'dept');
+
+        let rows = [];
+        if (currentView === 'dept') {
+            rows = metadata.years.map(s => ({ dept: selection, sem: s }));
+        } else {
+            rows = metadata.departments.map(d => ({ dept: d, sem: selection }));
+        }
+
+        let html = `
+            <table style="width: 100%; border-collapse: collapse; min-width: ${showLinkedCol ? '1100px' : '900px'};">
+                <thead>
+                    <tr style="background: #f1f5f9; text-align: left;">
+                        <th style="padding: 12px; border: 1px solid var(--border);">Class</th>
+                        <th style="padding: 12px; border: 1px solid var(--border);">Lab Subject 1</th>
+                        <th style="padding: 12px; border: 1px solid var(--border);">Lab Subject 2</th>
+                        <th style="padding: 12px; border: 1px solid var(--border);">Avoid Day</th>
+                        ${showLinkedCol ? '<th style="padding: 12px; border: 1px solid var(--border); background: #eff6ff;">🔗 Linked Branches</th>' : ''}
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        rows.forEach((r, idx) => {
+            const rooms = getAllRoomsForDept(r.dept);
+            const branchCheckboxes = showLinkedCol ? `
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">Select branches that attend this lab:</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    ${(metadata.branch_depts || []).map(bd => `
+                        <label style="display: flex; align-items: center; gap: 4px; font-size: 13px; background: #eff6ff; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+                            <input type="checkbox" class="linked-dept-${idx}" value="${bd}"> ${bd}
+                        </label>
+                    `).join('')}
+                </div>
+            ` : '';
+
+            html += `
+                <tr data-dept="${r.dept}" data-sem="${r.sem}">
+                    <td style="padding: 12px; border: 1px solid var(--border); font-weight: 600; color: var(--text-main);">
+                        ${r.dept === 'Applied Science' ? '🔬 ' : ''}${r.dept} - ${r.sem}
+                    </td>
+                    <td style="padding: 12px; border: 1px solid var(--border); background: #fafafa;">
+                        <input type="text" id="subj-1-${idx}" placeholder="Subject 1" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 5px;">
+                        <input type="text" id="teach-1-${idx}" placeholder="Teacher 1" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 5px;">
+                        <select id="room-1-${idx}" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="">-- Select Room --</option>
+                            ${rooms.map(rm => `<option value="${rm}">${rm}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td style="padding: 12px; border: 1px solid var(--border); background: #fafafa;">
+                        <input type="text" id="subj-2-${idx}" placeholder="Subject 2" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 5px;">
+                        <input type="text" id="teach-2-${idx}" placeholder="Teacher 2" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 5px;">
+                        <select id="room-2-${idx}" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="">-- Select Room --</option>
+                            ${rooms.map(rm => `<option value="${rm}">${rm}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td style="padding: 12px; border: 1px solid var(--border);">
+                        <select id="avoid-${idx}" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="">None</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </td>
+                    ${showLinkedCol ? `<td style="padding: 12px; border: 1px solid var(--border); background: #eff6ff;">${branchCheckboxes}</td>` : ''}
+                </tr>
+            `;
+        });
+
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+        gridEntries = rows.map(r => ({ ...r, showLinkedCol }));
+    }
+
+    async function generateLabs() {
+        const entries = [];
+        gridEntries.forEach((r, idx) => {
+            const s1 = document.getElementById(`subj-1-${idx}`).value;
+            const r1 = document.getElementById(`room-1-${idx}`).value;
+            const t1 = document.getElementById(`teach-1-${idx}`).value;
+            const s2 = document.getElementById(`subj-2-${idx}`).value;
+            const r2 = document.getElementById(`room-2-${idx}`).value;
+            const t2 = document.getElementById(`teach-2-${idx}`).value;
+            const avoid = document.getElementById(`avoid-${idx}`).value;
+
+            // Collect linked departments if Applied Science mode
+            let linked_depts = [];
+            if (r.showLinkedCol) {
+                document.querySelectorAll(`.linked-dept-${idx}:checked`).forEach(cb => {
+                    linked_depts.push(cb.value);
+                });
+            }
+
+            if (s1) {
+                entries.push({
+                    dept: r.dept,
+                    sem: r.sem,
+                    avoid: avoid,
+                    linked_depts: linked_depts,
+                    lab1: { subject: s1, teacher: t1, room: r1 },
+                    lab2: (s2) ? { subject: s2, teacher: t2, room: r2 } : null
+                });
+            }
+        });
+
+        if (entries.length === 0) {
+            alert("Please fill in at least Lab Subject 1 for one class.");
+            return;
+        }
+
+        try {
+            const res = await fetch('/generate_bulk_labs', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ entries })
+            });
+            const result = await res.json();
+            
+            if (result.status === "success") {
+                alert("✅ " + result.message);
+                window.location.href = "/view";
+            } else if (result.status === "partial") {
+                let msg = "⚠️ " + result.message + "\n\n";
+                msg += "The following labs could NOT be placed:\n";
+                result.failed.forEach((f, i) => {
+                    msg += `  ${i+1}. ${f}\n`;
+                });
+                msg += "\nPossible reasons: Teacher busy, Room occupied, or no free 3-period block available on a valid day.\n\nClick OK to see what was placed.";
+                alert(msg);
+                window.location.href = "/view";
+            } else {
+                alert("❌ Error: " + result.message);
+            }
+        } catch (e) {
+            alert("Server error while generating labs. Check console.");
+            console.error(e);
+        }
+    }
+
+    init();
+</script>
+{% endblock %}

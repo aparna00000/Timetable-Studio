@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="padding: 80px 0; max-width: 900px; margin: 0 auto;">
+    <div class="minimal-box"
+        style="text-align: center; margin-bottom: 40px; padding: 60px 20px; border-color: var(--blue-border); background: var(--blue-soft);">
+        <h2 style="font-size: 3rem; font-weight: 600; color: #1d1d1f; letter-spacing: -1.5px; margin-bottom: 20px;">
+            Academic scheduling, <br> refined.
+        </h2>
+        <p style="font-size: 1.1rem; color: #86868b; max-width: 500px; margin: 0 auto 40px; line-height: 1.5;">
+            An elegant, independent platform built to automate campus timetables with precision.
+        </p>
+
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            {% if not session.get('user_id') %}
+            <a href="{{ url_for('login') }}"
+                style="padding: 12px 30px; background: var(--blue-primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 0.9rem;">Sign
+                In</a>
+            <a href="{{ url_for('signup') }}"
+                style="padding: 12px 30px; border: 1px solid var(--blue-border); background: var(--blue-soft); color: var(--blue-primary); text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 0.9rem;">Create
+                Account</a>
+            {% else %}
+            <a href="{{ url_for('create_page') }}"
+                style="padding: 12px 30px; background: var(--blue-primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 0.9rem;">Generate
+                Now</a>
+            <a href="{{ url_for('view_page') }}"
+                style="padding: 12px 30px; border: 1px solid var(--blue-border); background: var(--blue-soft); color: var(--blue-primary); text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 0.9rem;">View
+                All</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div class="minimal-box" style="padding: 25px;">
+            <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; color: var(--blue-primary);">Precision</h4>
+            <p style="font-size: 0.8rem; color: #86868b; line-height: 1.6; margin: 0;">Clash detection ensuring every
+                teacher and room is optimally allocated.</p>
+        </div>
+        <div class="minimal-box" style="padding: 25px;">
+            <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; color: var(--blue-primary);">Autonomy</h4>
+            <p style="font-size: 0.8rem; color: #86868b; line-height: 1.6; margin: 0;">Private workspaces ensuring
+                institution data remains secure.</p>
+        </div>
+        <div class="minimal-box" style="padding: 25px;">
+            <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; color: var(--blue-primary);">Automation</h4>
+            <p style="font-size: 0.8rem; color: #86868b; line-height: 1.6; margin: 0;">Logic for labs and multi-period
+                blocks, handled instantly.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

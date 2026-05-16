@@ -1,0 +1,1070 @@
+{
+    "CS": {
+        "First Year": {
+            "CS1": {
+                "Monday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "physics",
+                        "teacher": "anu",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "graphics",
+                        "teacher": "sudheesh",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "life skill",
+                        "teacher": "sruthi",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "maths",
+                        "teacher": "chums",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "bcme",
+                        "teacher": "sini",
+                        "type": "Theory"
+                    }
+                ],
+                "Tuesday": [
+                    {
+                        "subject": "graphics",
+                        "teacher": "sudheesh",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "maths",
+                        "teacher": "chums",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "physics",
+                        "teacher": "anu",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "bcme",
+                        "teacher": "sini",
+                        "type": "Theory"
+                    }
+                ],
+                "Wednesday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "physics",
+                        "teacher": "anu",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "bcme",
+                        "teacher": "sini",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "graphics",
+                        "teacher": "sudheesh",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    }
+                ],
+                "Thursday": [
+                    {
+                        "subject": "physics",
+                        "teacher": "anu",
+                        "type": "Lab",
+                        "room": "Physics lab"
+                    },
+                    {
+                        "subject": "physics",
+                        "teacher": "anu",
+                        "type": "Lab",
+                        "room": "Physics lab"
+                    },
+                    {
+                        "subject": "physics",
+                        "teacher": "anu",
+                        "type": "Lab",
+                        "room": "Physics lab"
+                    },
+                    {
+                        "subject": "life skill",
+                        "teacher": "sruthi",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "graphics",
+                        "teacher": "sudheesh",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "maths",
+                        "teacher": "chums",
+                        "type": "Theory"
+                    }
+                ],
+                "Friday": [
+                    {
+                        "subject": "physics",
+                        "teacher": "anu",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "maths",
+                        "teacher": "chums",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "bcme",
+                        "teacher": "sini",
+                        "type": "Lab",
+                        "room": "BCME lab"
+                    },
+                    {
+                        "subject": "bcme",
+                        "teacher": "sini",
+                        "type": "Lab",
+                        "room": "BCME lab"
+                    },
+                    {
+                        "subject": "bcme",
+                        "teacher": "sini",
+                        "type": "Lab",
+                        "room": "BCME lab"
+                    }
+                ]
+            }
+        },
+        "Fourth Year": {
+            "CS1": {
+                "Monday": [
+                    {
+                        "subject": "elective",
+                        "teacher": "resna",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "network",
+                        "teacher": "nithya",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "computing",
+                        "teacher": "shamal",
+                        "type": "Theory"
+                    }
+                ],
+                "Tuesday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "network",
+                        "teacher": "nithya",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "elective",
+                        "teacher": "resna",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "project",
+                        "teacher": "shamal",
+                        "type": "Lab",
+                        "room": "Classroom"
+                    },
+                    {
+                        "subject": "project",
+                        "teacher": "shamal",
+                        "type": "Lab",
+                        "room": "Classroom"
+                    },
+                    {
+                        "subject": "project",
+                        "teacher": "shamal",
+                        "type": "Lab",
+                        "room": "Classroom"
+                    }
+                ],
+                "Wednesday": [
+                    {
+                        "subject": "elevitve",
+                        "teacher": "resna",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "elevitve",
+                        "teacher": "resna",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "elevitve",
+                        "teacher": "resna",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "computing",
+                        "teacher": "shamal",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "network",
+                        "teacher": "nithya",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    }
+                ],
+                "Thursday": [
+                    {
+                        "subject": "computing",
+                        "teacher": "shamal",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "elective",
+                        "teacher": "resna",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    }
+                ],
+                "Friday": [
+                    {
+                        "subject": "elective",
+                        "teacher": "resna",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "computing",
+                        "teacher": "shamal",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    }
+                ]
+            }
+        }
+    },
+    "IT": {
+        "First Year": {
+            "IT1": {
+                "Monday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "ENGINEERING PHYSICS",
+                        "teacher": "ANU",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "ENGINEERING MECHANICS",
+                        "teacher": "RENJITH",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "LINEAR ALGEBRA AND CALCULUS",
+                        "teacher": "CHUMS",
+                        "type": "Theory"
+                    }
+                ],
+                "Tuesday": [
+                    {
+                        "subject": "PYTHON",
+                        "teacher": "ANJANA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "PYTHON",
+                        "teacher": "ANJANA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "PYTHON",
+                        "teacher": "ANJANA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "LINEAR ALGEBRA AND CALCULUS",
+                        "teacher": "CHUMS",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "ENGINEERING MECHANICS",
+                        "teacher": "RENJITH",
+                        "type": "Theory"
+                    }
+                ],
+                "Wednesday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "LINEAR ALGEBRA AND CALCULUS",
+                        "teacher": "CHUMS",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "ENGINEERING MECHANICS",
+                        "teacher": "RENJITH",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "ENGINEERING PHYSICS",
+                        "teacher": "ANU",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "BCME",
+                        "teacher": "SINI",
+                        "type": "Theory"
+                    }
+                ],
+                "Thursday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "ENGINEERING MECHANICS",
+                        "teacher": "RENJITH",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "BCME",
+                        "teacher": "SINI",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "LINEAR ALGEBRA AND CALCULUS",
+                        "teacher": "CHUMS",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "LIFE SKILL",
+                        "teacher": "SRUTHI",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "ENGINEERING PHYSICS",
+                        "teacher": "ANU",
+                        "type": "Theory"
+                    }
+                ],
+                "Friday": [
+                    {
+                        "subject": "BCME",
+                        "teacher": "SINI",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "LIFE SKILL",
+                        "teacher": "SRUTHI",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "ENGINEERING PHYSICS",
+                        "teacher": "ANU",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "CHEMISTRY",
+                        "teacher": "ANU",
+                        "type": "Lab",
+                        "room": "chem lab"
+                    },
+                    {
+                        "subject": "CHEMISTRY",
+                        "teacher": "ANU",
+                        "type": "Lab",
+                        "room": "chem lab"
+                    },
+                    {
+                        "subject": "CHEMISTRY",
+                        "teacher": "ANU",
+                        "type": "Lab",
+                        "room": "chem lab"
+                    }
+                ]
+            }
+        },
+        "Second Year": {
+            "IT1": {
+                "Monday": [
+                    {
+                        "subject": "DISCRETE MATHEMATICAL STRUCTURE",
+                        "teacher": "NEETHI",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DESIGN AND ENGINEERING",
+                        "teacher": "GEETHU",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA STRUCTURES",
+                        "teacher": "RESNA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "PROBLEM SOLVING USING PYTHON",
+                        "teacher": "ANJANA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DIGITAL SYSTEM DESIGN",
+                        "teacher": "RESNA",
+                        "type": "Theory"
+                    }
+                ],
+                "Tuesday": [
+                    {
+                        "subject": "SUSTAINABLE ENGINEERING",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DIGITAL SYSTEM DESIGN",
+                        "teacher": "RESNA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "DATA STRUCTURES",
+                        "teacher": "RESNA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "PROBLEM SOLVING USING PYTHON",
+                        "teacher": "ANJANA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DISCRETE MATHEMATICAL STRUCTURE",
+                        "teacher": "NEETHI",
+                        "type": "Theory"
+                    }
+                ],
+                "Wednesday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "DISCRETE MATHEMATICAL STRUCTURE",
+                        "teacher": "NEETHI",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "SUSTAINABLE ENGINEERING",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA STRUCTURES",
+                        "teacher": "RESNA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "DIGITAL SYSTEM DESIGN",
+                        "teacher": "RESNA",
+                        "type": "Theory"
+                    }
+                ],
+                "Thursday": [
+                    {
+                        "subject": "JAVA",
+                        "teacher": "ANJANA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "JAVA",
+                        "teacher": "ANJANA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "JAVA",
+                        "teacher": "ANJANA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "DISCRETE MATHEMATICAL STRUCTURE",
+                        "teacher": "NEETHI",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA STRUCTURES",
+                        "teacher": "RESNA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "PROBLEM SOLVING USING PYTHON",
+                        "teacher": "ANJANA",
+                        "type": "Theory"
+                    }
+                ],
+                "Friday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "DESIGN AND ENGINEERING",
+                        "teacher": "GEETHU",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DIGITAL SYSTEM DESIGN",
+                        "teacher": "RESNA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA STRUCTURE",
+                        "teacher": "RESNA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "DATA STRUCTURE",
+                        "teacher": "RESNA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "DATA STRUCTURE",
+                        "teacher": "RESNA",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    }
+                ]
+            }
+        },
+        "Third Year": {
+            "IT1": {
+                "Monday": [
+                    {
+                        "subject": "WAD",
+                        "teacher": "SHAMAL",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "WAD",
+                        "teacher": "SHAMAL",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "WAD",
+                        "teacher": "SHAMAL",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "MANAGEMENT FOR SOFTWARE ENGINEERS",
+                        "teacher": "ANJANA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "WEB APPLICATION DEVLOPMENT",
+                        "teacher": "SHAMAL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "OPERATING SYSTEM",
+                        "teacher": "NITHYA",
+                        "type": "Theory"
+                    }
+                ],
+                "Tuesday": [
+                    {
+                        "subject": "WEB APPLICATION DEVLOPMENT",
+                        "teacher": "SHAMAL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA COMMUNICATION AND NETWORK",
+                        "teacher": "AKHIL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "FORMAL LANGUAGES AND AUTOMATA THEORY",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "OS",
+                        "teacher": "NITHYA GP",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "OS",
+                        "teacher": "NITHYA GP",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    },
+                    {
+                        "subject": "OS",
+                        "teacher": "NITHYA GP",
+                        "type": "Lab",
+                        "room": "cs-IT-Lab A"
+                    }
+                ],
+                "Wednesday": [
+                    {
+                        "subject": "FORMAL LANGUAGES AND AUTOMATA THEORY",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA COMMUNICATION AND NETWORK",
+                        "teacher": "AKHIL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "MANAGEMENT FOR SOFTWARE ENGINEERS",
+                        "teacher": "ANJANA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "WEB APPLICATION DEVLOPMENT",
+                        "teacher": "SHAMAL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "OPERATING SYSTEM",
+                        "teacher": "NITHYA",
+                        "type": "Theory"
+                    }
+                ],
+                "Thursday": [
+                    {
+                        "subject": "OPERATING SYSTEM",
+                        "teacher": "NITHYA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "FORMAL LANGUAGES AND AUTOMATA THEORY",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DISASTER MANAGEMENT",
+                        "teacher": "ANCY",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "WEB APPLICATION DEVLOPMENT",
+                        "teacher": "SHAMAL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "MANAGEMENT FOR SOFTWARE ENGINEERS",
+                        "teacher": "ANJANA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA COMMUNICATION AND NETWORK",
+                        "teacher": "AKHIL",
+                        "type": "Theory"
+                    }
+                ],
+                "Friday": [
+                    {
+                        "subject": "DISASTER MANAGEMENT",
+                        "teacher": "ANCY",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA COMMUNICATION AND NETWORK",
+                        "teacher": "AKHIL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "FORMAL LANGUAGES AND AUTOMATA THEORY",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "MANAGEMENT FOR SOFTWARE ENGINEERS",
+                        "teacher": "ANJANA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "OPERATING SYSTEM",
+                        "teacher": "NITHYA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    }
+                ]
+            }
+        },
+        "Fourth Year": {
+            "IT1": {
+                "Monday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "PROGRAM ELECTIVE 2",
+                        "teacher": "NITHYA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA ANALYTICS",
+                        "teacher": "AKHIL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    }
+                ],
+                "Tuesday": [
+                    {
+                        "subject": "PROGRAM ELECTIVE 2",
+                        "teacher": "NITHYA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "INDUSTRIAL SAFETY ENGINEERING",
+                        "teacher": "GEETHU",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "OPEN ELECTIVE",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "DATA ANALYTICS",
+                        "teacher": "AKHIL",
+                        "type": "Theory"
+                    }
+                ],
+                "Wednesday": [
+                    {
+                        "subject": "PROGRAM ELECTIVE 2",
+                        "teacher": "NITHYA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "OPEN ELECTIVE",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "DATA ANALYTICS",
+                        "teacher": "AKHIL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    }
+                ],
+                "Thursday": [
+                    {
+                        "subject": "OPEN ELECTIVE",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "DATA ANALYTICS",
+                        "teacher": "AKHIL",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "PROGRAM ELECTIVE 2",
+                        "teacher": "NITHYA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "INDUSTRIAL SAFETY ENGINEERING",
+                        "teacher": "GEETHU",
+                        "type": "Theory"
+                    }
+                ],
+                "Friday": [
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    },
+                    {
+                        "subject": "OPEN ELECTIVE",
+                        "teacher": "BABITHA",
+                        "type": "Theory"
+                    },
+                    {
+                        "subject": "Free",
+                        "teacher": "Free",
+                        "type": "Free",
+                        "room": ""
+                    }
+                ]
+            }
+        }
+    }
+}

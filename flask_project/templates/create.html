@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+
+{% block title %}Generate Timetable - Timetable Automation System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-card {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+
+    .semester-block {
+        background: var(--background);
+        padding: 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        border: 1px solid var(--border);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .semester-title {
+        font-size: 18px;
+        color: var(--text-main);
+        margin-bottom: 16px;
+        font-weight: 600;
+    }
+
+    .generate-btn {
+        width: 100%;
+    }
+
+    .info-box {
+        background: #eff6ff;
+        padding: 16px;
+        margin-bottom: 24px;
+        border-left: 4px solid var(--blue-primary);
+        border-radius: 4px;
+        color: #1e3a8a;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    input[type="file"]::file-selector-button {
+        padding: 8px 16px;
+        margin-right: 16px;
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text-muted);
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    
+    input[type="file"]::file-selector-button:hover {
+        background: #e2e8f0;
+    }
+    /* The switch - the box around the slider */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: var(--blue-primary);
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 2000;
+        backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+        background: white;
+        margin: 5% auto;
+        padding: 0;
+        width: 90%;
+        max-width: 1100px;
+        border-radius: 12px;
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        max-height: 85vh;
+    }
+
+    .modal-header {
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-body {
+        padding: 20px;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .modal-footer {
+        padding: 20px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .spreadsheet-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    .spreadsheet-table th, .spreadsheet-table td {
+        border: 1px solid var(--border);
+        padding: 8px;
+        text-align: left;
+    }
+
+    .spreadsheet-table th {
+        background: #f8fafc;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .spreadsheet-table td[contenteditable] {
+        background: #fff;
+        outline: none;
+    }
+
+    .spreadsheet-table td[contenteditable]:focus {
+        background: #eff6ff;
+        box-shadow: inset 0 0 0 2px var(--blue-primary);
+    }
+
+    .tab-nav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .tab-btn {
+        padding: 8px 16px;
+        border: 1px solid var(--border);
+        background: #f1f5f9;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .tab-btn.active {
+        background: var(--blue-primary);
+        color: white;
+        border-color: var(--blue-primary);
+    }
+
+    .manual-btn {
+        background: #f1f5f9;
+        color: var(--blue-primary);
+        border: 1px solid var(--blue-primary);
+        padding: 4px 10px;
+        font-size: 11px;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+
+    .manual-btn:hover {
+        background: var(--blue-primary);
+        color: white;
+    }
+</style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<section class="card upload-card">
+    <div class="info-box">
+        <strong>🔹 Upload Instructions & Format</strong><br><br>
+        Please ensure your Excel files use the exact column headers below (capitalization doesn't matter, but spelling does).<br><br>
+        
+        <strong>🧑‍🏫 Teacher File Required Columns:</strong>
+        <ul>
+            <li><code>Teacher Name</code></li>
+            <li><code>Subject Name</code></li>
+            <li><code>Hours per Week</code></li>
+            <li><code>Type (Theory/Lab)</code> <i>(Optional, defaults to Theory)</i></li>
+        </ul>
+        <br>
+        
+        <strong>🧪 Lab File Required Columns:</strong>
+        <ul>
+            <li><code>Teacher Name</code></li>
+            <li><code>Lab Subject</code></li>
+            <li><code>Day</code> <i>(e.g., Monday, Tuesday)</i></li>
+            <li><code>Start Period</code> <i>(e.g., 1, 2, 3)</i></li>
+            <li><code>End Period</code> <i>(e.g., 2, 3, 4)</i></li>
+        </ul>
+        <br>
+        🔹 System will generate a random clash-free timetable<br>
+        🔹 Each year's timetable will be shown separately
+    </div>
+
+    <form action="{{ url_for('generate') }}" method="post" enctype="multipart/form-data">
+        <div class="semester-block">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="semester-title" style="margin: 0;">Generation Details</div>
+                <div style="display: flex; align-items: center; gap: 10px; background: #f1f5f9; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border);">
+                    <span style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Bulk Mode</span>
+                    <label class="switch" style="position: relative; display: inline-block; width: 40px; height: 20px;">
+                        <input type="checkbox" id="bulk_mode" name="bulk_mode" onchange="toggleBulkMode()" style="opacity: 0; width: 0; height: 0;">
+                        <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px;"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Select Department</label>
+                <select id="dept_dropdown" name="dept_dropdown" onchange="toggleDeptCustom()" required>
+                    <option value="">-- Choose Department --</option>
+                    <option value="CS">CS (Computer Science)</option>
+                    <option value="IT">IT (Information Technology)</option>
+                    <option value="MECH">MECH (Mechanical)</option>
+                    <option value="EE">EE (Electrical)</option>
+                    <option value="EC">EC (Electronics)</option>
+                    <option value="CIVIL">CIVIL</option>
+                    <option value="Other">Other (Add New)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="dept_custom_group" style="display: none;">
+                <label>Enter New Department Name</label>
+                <input type="text" id="dept_custom" name="dept_custom" placeholder="e.g. CHEMICAL">
+            </div>
+
+            <!-- Single Mode Fields -->
+            <div id="single_mode_fields">
+                <div class="form-group">
+                    <label>Year / Class Name (e.g., First Year)</label>
+                    <input type="text" id="year_name" name="year_name" placeholder="Enter year name (e.g., First Year)">
+                </div>
+
+                <div class="form-group">
+                    <label>Section Name (e.g., CS1, CS2, IT1)</label>
+                    <input type="text" id="section_name" name="section_name" placeholder="Enter section name (e.g., CS1)">
+                    <small style="color: var(--text-muted); font-size: 12px;">Each section gets its own independent timetable.</small>
+                </div>
+            </div>
+
+            <!-- Bulk Mode Message -->
+            <div id="bulk_mode_info" style="display: none; background: #fdf2f8; padding: 15px; border-radius: 8px; border-left: 4px solid #db2777; margin-bottom: 20px; color: #9d174d; font-size: 13px;">
+                <strong>🚀 Bulk Mode Active:</strong> The system will automatically detect Years/Semesters (S1-S8) from your Excel file and generate all 4 years at once.
+            </div>
+
+            <div class="form-group">
+                <label>Upload Teacher-Subject File 
+                    <button type="button" class="manual-btn" onclick="openEditor('theory')">📝 Use Online Editor</button>
+                </label>
+                <input type="file" id="teacher_file_input" name="teacher_file" required>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Lab Slot File (Optional for Bulk)
+                    <button type="button" class="manual-btn" onclick="openEditor('lab')">📝 Use Online Editor</button>
+                </label>
+                <input type="file" id="lab_file_input" name="lab_file">
+            </div>
+        </div>
+        
+        <!-- Hidden inputs for manual data -->
+        <input type="hidden" id="theory_data_json" name="theory_data_json">
+        <input type="hidden" id="lab_data_json" name="lab_data_json">
+        
+        <button type="submit" class="generate-btn">
+            ✨ Generate Timetable
+        </button>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleDeptCustom() {
+        const dropdown = document.getElementById('dept_dropdown');
+        const customGroup = document.getElementById('dept_custom_group');
+        const customInput = document.getElementById('dept_custom');
+        
+        if (dropdown.value === 'Other') {
+            customGroup.style.display = 'block';
+            customInput.required = true;
+        } else {
+            customGroup.style.display = 'none';
+            customInput.required = false;
+        }
+    }
+
+    function toggleBulkMode() {
+        const isBulk = document.getElementById('bulk_mode').checked;
+        const singleFields = document.getElementById('single_mode_fields');
+        const bulkInfo = document.getElementById('bulk_mode_info');
+        const yearInput = document.getElementById('year_name');
+        const sectionInput = document.getElementById('section_name');
+
+        if (isBulk) {
+            singleFields.style.display = 'none';
+            bulkInfo.style.display = 'block';
+            yearInput.required = false;
+            sectionInput.required = false;
+        } else {
+            singleFields.style.display = 'block';
+            bulkInfo.style.display = 'none';
+            yearInput.required = true;
+            sectionInput.required = true;
+        }
+    }
+
+    // Initialize
+    window.onload = toggleBulkMode;
+
+    // Local cache for spreadsheet data
+    let cachedData = { theory: [], lab: [] };
+
+    // File Input Listeners for "Upload to Edit"
+    document.getElementById('teacher_file_input').addEventListener('change', (e) => handleFileUpload(e, 'theory'));
+    document.getElementById('lab_file_input').addEventListener('change', (e) => handleFileUpload(e, 'lab'));
+
+    function handleFileUpload(event, type) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+            
+            if (jsonData.length > 0) {
+                // Map columns to our headers
+                cachedData[type] = jsonData.map(row => {
+                    const mapped = {};
+                    headers[type].forEach(h => {
+                        // Find matching key in uploaded row (fuzzy match)
+                        const key = Object.keys(row).find(k => k.toLowerCase().replace(/ /g,'') === h.toLowerCase().replace(/ /g,''));
+                        mapped[h] = key ? row[key] : '';
+                    });
+                    return mapped;
+                });
+                
+                alert(`Successfully loaded ${jsonData.length} rows from Excel into the ${type} editor! You can now click "Use Online Editor" to tweak them.`);
+                
+                // Visual feedback
+                const btn = document.querySelector(`button[onclick="openEditor('${type}')"]`);
+                btn.innerHTML = `✏️ Edit Uploaded (${jsonData.length} rows)`;
+                btn.style.background = '#dbeafe';
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // Spreadsheet Logic
+    const headers = {
+        theory: ['TEACHER', 'SUBJECT CODE', 'SUBJECT NAME', 'CLASS/DIVISION', 'HOUR PER WEEK', 'DEPARTMENT'],
+        lab: ['SEMESTER', 'CLASS', 'LAB SUB', 'DAY', 'START', 'END', 'LABROOM', 'TEACHER']
+    };
+
+    let activeTable = 'theory';
+
+    function openEditor(type) {
+        activeTable = type;
+        document.getElementById('editor-modal').style.display = 'block';
+        document.getElementById('modal-title').innerText = (type === 'theory' ? 'Theory / Teacher' : 'Lab') + ' Data Editor';
+        
+        // Reset or Load existing headers
+        const table = document.getElementById('spreadsheet');
+        const thead = table.querySelector('thead tr');
+        thead.innerHTML = '';
+        headers[type].forEach(h => {
+            const th = document.createElement('th');
+            th.innerText = h;
+            thead.appendChild(th);
+        });
+
+        // Add 5 empty rows if empty
+        const tbody = table.querySelector('tbody');
+        if (tbody.innerHTML.trim() === "" || true) { // Always reset for now or load cached
+             tbody.innerHTML = '';
+             for(let i=0; i<8; i++) addRow();
+        }
+    }
+
+    function addRow() {
+        const tbody = document.getElementById('spreadsheet').querySelector('tbody');
+        const tr = document.createElement('tr');
+        headers[activeTable].forEach(() => {
+            const td = document.createElement('td');
+            td.contentEditable = true;
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    }
+
+    function closeEditor() {
+        document.getElementById('editor-modal').style.display = 'none';
+    }
+
+    function applyData() {
+        const table = document.getElementById('spreadsheet');
+        const rows = table.querySelectorAll('tbody tr');
+        const data = [];
+        
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            const rowData = {};
+            let hasValue = false;
+            cells.forEach((cell, i) => {
+                const val = cell.innerText.trim();
+                if (val) hasValue = true;
+                rowData[headers[activeTable][i]] = val;
+            });
+            if (hasValue) data.push(rowData);
+        });
+
+        if (data.length === 0) {
+            alert("No data entered!");
+            return;
+        }
+
+        // Store as JSON in hidden field
+        const hiddenField = document.getElementById(activeTable + '_data_json');
+        hiddenField.value = JSON.stringify(data);
+
+        // Visual feedback
+        const btn = document.querySelector(`button[onclick="openEditor('${activeTable}')"]`);
+        btn.innerHTML = `✅ ${data.length} Rows Entered`;
+        btn.style.background = 'var(--success)';
+        btn.style.color = 'white';
+        
+        // Make file input not required if data is provided
+        if (activeTable === 'theory') {
+            document.getElementById('teacher_file_input').required = false;
+        }
+
+        closeEditor();
+    }
+</script>
+
+<!-- Editor Modal -->
+<div id="editor-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title" style="margin:0;">Data Editor</h3>
+            <button type="button" onclick="closeEditor()" style="background:none; color:var(--text-muted); font-size:24px; padding:0; box-shadow:none;">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Enter details directly below. You can copy-paste from an actual Excel sheet here.</p>
+            <div style="overflow-x: auto;">
+                <table id="spreadsheet" class="spreadsheet-table">
+                    <thead>
+                        <tr></tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" onclick="addRow()" style="margin-top: 15px; background: #f1f5f9; color: var(--blue-primary); border: 1px dashed var(--blue-primary); width: 100%;">+ Add Row</button>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="closeEditor()" style="background:#f1f5f9; color:var(--text-muted);">Cancel</button>
+            <button type="button" onclick="applyData()" style="background:var(--success);">Apply to Generation</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

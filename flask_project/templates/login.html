@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Timetable Pro{% endblock %}
+
+{% block extra_css %}
+<style>
+.login-container {
+    max-width: 400px;
+    margin: 4rem auto;
+    background: var(--background);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.login-container h2 {
+    text-align: center;
+    color: var(--text-main);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.75rem;
+}
+
+.login-container p {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--blue-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h2>System Access 🔒</h2>
+    <p>Please log in to manage timetables and labs.</p>
+    
+    <form method="POST" action="{{ url_for('login', next=request.args.get('next')) }}">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autofocus placeholder="Admin username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Admin password">
+        </div>
+        <button type="submit" class="login-btn">Log In</button>
+    </form>
+    <div style="text-align: center; margin-top: 25px;">
+        <p style="color: var(--text-muted); font-size: 14px;">Don't have an account? 
+            <a href="{{ url_for('signup') }}" style="color: var(--blue-primary); text-decoration: none; font-weight: 600;">Sign Up</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

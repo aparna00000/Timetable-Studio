@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Timetable Studio{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue-primary: #0071e3;
+            --blue-light: #f5faff;
+            --blue-soft: #eef6ff;
+            --blue-border: #d0e4ff;
+            --background: #ffffff;
+            --text-main: #1d1d1f;
+            --text-muted: #86868b;
+            --border: #f0f0f0;
+            --glass: rgba(255, 255, 255, 0.8);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, sans-serif;
+            background: var(--background);
+            color: var(--text-main);
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background: var(--glass);
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 40px;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-main);
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            min-height: calc(100vh - 160px);
+        }
+
+        footer {
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Box Utility */
+        .minimal-box {
+            background: #ffffff;
+            border: 1px solid #eeeeee;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .minimal-box:hover {
+            border-color: #d1d1d6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        /* Flash Messages - Minimal */
+        .flash {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            background: #ffffff;
+            border: 1px solid #eeeeee;
+        }
+        /* End of base styles */
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Timetable Studio</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+                    {% if session.get('user_id') %}
+                        <li><a href="{{ url_for('create_page') }}" class="{% if request.endpoint == 'create_page' %}active{% endif %}">Create</a></li>
+                        <li><a href="{{ url_for('lab_page') }}" class="{% if request.endpoint == 'lab_page' %}active{% endif %}">Labs</a></li>
+                        <li><a href="{{ url_for('view_page') }}" class="{% if request.endpoint == 'view_page' %}active{% endif %}">View</a></li>
+                        <li><a href="{{ url_for('logout') }}" style="color: #ff3b30;">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 TIMETABLE STUDIO. INDEPENDENT ACADEMIC SCHEDULING.</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
